@@ -18,13 +18,10 @@ docwell 是一份**最简规约**，把这三个问题一次性堵住。核心�
 
 1. 打开 [`docwell.md`](./docwell.md)，整段复制。
 2. 粘到你项目根的 `CLAUDE.md` 或 `AGENTS.md` 顶部。
-3. 按项目实际情况改三处：
-   - 第 1 节：把 `docs/` / `deploy/` 换成你项目真实的目录名。
-   - 第 2 节：选编号方式（`${num}_` 前缀 或 日期后缀），全项目统一。
-   - 第 6 节：把你用的 skill/workflow 工作区（OpenSpec / Superpowers / 等）登记上去。
+3. 按项目实际情况微调：
+   - 第 1、2 节：`docs/` 用 `${num}_`（`00_`、`01_`…）编号的**扁平** `.md` 文件，类型/领域写进文件名、不建子目录，一般无需改动。
+   - 第 5 节：把你用的 skill/workflow 工作区（OpenSpec / Superpowers / 等）登记上去。
 4. 提交。后续 AI session 读到根 `CLAUDE.md` 时会自动遵守。
-
-想看一份"已特化到具体项目"的成品对照，见 [`examples/docs-enterprise-saas.md`](./examples/docs-enterprise-saas.md)。
 
 ## 核心模型：三层中间产物
 
@@ -32,13 +29,13 @@ docwell 是一份**最简规约**，把这三个问题一次性堵住。核心�
 
 | 层 | 去哪 | 判定 | 典型 |
 |----|------|------|------|
-| **1. durable** | `docs/` 或 `deploy/` | 未来 session 会反复查阅 | 架构决策、踩坑记录、部署脚本 |
+| **1. durable** | `docs/` | 未来 session 会反复查阅 | 架构决策、踩坑记录、约定 |
 | **2. working** | 仓库内**已登记**的 skill 工作区 | 由某个 skill/workflow 托管的阶段性产物 | OpenSpec `openspec/changes/<id>/`、Superpowers `specs/`/`plans/`/`notes/` |
-| **3. ephemeral** | OS 临时目录（`mktemp -d`） | 本 session 消化完即扔 | 单次 grep 缓存、subagent 中间文本 |
+| **3. ephemeral** | 项目 `.tmp/`（gitignore） | 本 session 消化完即扔 | 单次 grep 缓存、subagent 中间文本 |
 
 关键分界：
 - 有 skill 托管 → 第 2 层（进仓库）
-- 没 skill 托管、AI 自发想记 → 第 3 层（去 temp，**不准进仓库**）
+- 没 skill 托管、AI 自发想记 → 第 3 层（去项目 `.tmp/`，已 gitignore，**不进版本库**）
 - 任务结束后还要被反复查阅 → 第 1 层（`docs/`）
 
 这套划分解决了"AI 没完没了在仓库里建 `plan.md`"的常见痛点，同时不掐死 OpenSpec / Superpowers 这些把工作产物放仓库的成熟技能。
@@ -47,10 +44,8 @@ docwell 是一份**最简规约**，把这三个问题一次性堵住。核心�
 
 ```
 docwell/
-├── README.md                            # 本文
-├── docwell.md                           # 通用规约（粘贴到 CLAUDE.md / AGENTS.md）
-├── examples/
-│   └── docs-enterprise-saas.md          # 针对 docs/ + enterprise/ + saas/ + deploy/ 结构的特化示例
+├── README.md      # 本文
+├── docwell.md     # 通用规约（粘贴到 CLAUDE.md / AGENTS.md）
 └── LICENSE
 ```
 
